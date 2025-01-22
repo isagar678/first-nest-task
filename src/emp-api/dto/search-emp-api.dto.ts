@@ -1,19 +1,23 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, MinLength } from 'class-validator';
 
 export class SearchEmpApiDto {
   @IsOptional()
+  @MinLength(3)
   @IsString()
-  firstName?: string;
+  firstName: string;
 
   @IsOptional()
   @IsString()
-  lastName?: string;
+  @MinLength(3)
+  lastName: string;
 
   @IsOptional()
   @IsString()
-  technology?: string;
+  @MinLength(3)
+  technology: string;
 
   @IsOptional()
   @IsString()
-  designation?: string;
+  @MinLength(3)
+  designation: string;
 }

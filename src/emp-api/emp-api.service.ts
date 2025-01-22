@@ -10,9 +10,9 @@ export class EmpApiService {
     {
       id: 0,
       firstName: 'ninjaA',
-      lastName: 'last ',
-      experience: 0,
-      technology: 'node.js',
+      lastName: 'last',
+      experience: 2,
+      technology: 'node',
       designation: 'trainee',
       joinedDate: '12-12-2022',
       isDeleted: false,
@@ -22,7 +22,7 @@ export class EmpApiService {
       id: 1,
       firstName: 'ninjaB',
       lastName: 'chess',
-      experience: 0,
+      experience: 3,
       technology: 'node.js',
       designation: 'trainee',
       joinedDate: '12-12-2022',
@@ -40,8 +40,20 @@ export class EmpApiService {
   }
 
   findAll() {
-    return this.employees.filter((emp) => emp.isDeleted == false);
+    return this.employees
+      .filter((emp) => emp.isDeleted === false)
+      .map((emp) => {
+        const newEmp = {}; 
+        for (let key in emp) {
+          if (key !== 'isDeleted') {
+            newEmp[key] = emp[key]; 
+          }
+        }
+        return newEmp;
+      });
   }
+  
+  
 
   findOne(id: number) {
     const employee = this.employees.find((emp)=>emp.id == id);
@@ -51,20 +63,14 @@ export class EmpApiService {
     return employee
   }
 
-  // findOneByFirstName(firstName:string){
-  //   const employee = this.employees.find((emp)=>emp.firstName == firstName);
-  //   if (!employee) {
-  //     throw NotFoundException
-  //   }
-  //   return employee
-  // }
+
 
   update(id: number, updateEmpApiDto: UpdateEmpApiDto) {
     // updateEmpApiDt = Date.now()
     this.employees = this.employees.map((emp) => {
       return emp.id == id ? { ...emp, ...updateEmpApiDto } : emp;
     });
-    return this.employees;
+    return this.findAll();
   }
 
   updateTech(id: number, updateEmpApiTechDto: UpdateEmpApiTechDto) {
@@ -91,20 +97,23 @@ export class EmpApiService {
     });
   }
 
-  search(query: SearchEmpApiDto) {
-    return this.employees.filter((employee) => {
-      if (query.firstName && !employee.firstName.includes(query.firstName))
+  search(query: any) {
+    // console.log(query)
+    let newEmployees:any =  this.employees.filter((employee) => {
+      if (query.firstName && !employee.firstName.toLocaleLowerCase().includes(query.firstName.toLocaleLowerCase()))
         return false;
-      if (query.lastName && !employee.lastName.includes(query.lastName))
+      if (query.lastName && !employee.lastName.toLocaleLowerCase().includes(query.lastName.toLocaleLowerCase()))
         return false;
-      if (query.technology && !employee.technology.includes(query.technology))
+      if (query.technology && !employee.technology.toLocaleLowerCase().includes(query.technology.toLocaleLowerCase()))
         return false;
       if (
         query.designation &&
-        !employee.designation.includes(query.designation)
+        !employee.designation.toLocaleLowerCase().includes(query.designation.toLocaleLowerCase())
       )
         return false;
       return true;
     });
+    // console.log(newEmployees)
+    return newEmployees
   }
 }

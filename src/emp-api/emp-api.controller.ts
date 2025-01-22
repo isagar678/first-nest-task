@@ -22,13 +22,19 @@ export class EmpApiController {
   constructor(private readonly empApiService: EmpApiService) {}
 
   @Post()
-  create(@Body(new ValidationPipe()) createEmpApiDto: CreateEmpApiDto) {
+  create(@Body(ValidationPipe) createEmpApiDto: CreateEmpApiDto) {
     return this.empApiService.create(createEmpApiDto);
   }
 
   @Get()
   findAll() {
     return this.empApiService.findAll();
+  }
+
+  @Get('search')
+  getByQuery(@Query(new ValidationPipe()) query: SearchEmpApiDto) {
+    // console.log(query)
+    return this.empApiService.search(query);
   }
 
   @Get(':id')
@@ -40,7 +46,7 @@ export class EmpApiController {
     }
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() updateEmpApiDto: UpdateEmpApiDto) {
     return this.empApiService.update(+id, updateEmpApiDto);
   }
@@ -57,10 +63,7 @@ export class EmpApiController {
   remove(@Param('id') id: string) {
     return this.empApiService.remove(+id);
   }
-  @Get('/search')
-  getByQuery(@Query(new ValidationPipe()) query: SearchEmpApiDto) {
-    return this.empApiService.search(query);
-  }
+
   // @Get('/search')
   // getByQuery(@Query )
 }
